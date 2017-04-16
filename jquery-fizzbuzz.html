@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2017 by GGiessing (http://jsbin.com/vapirox/1/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+    <style id="jsbin-css">
+        * {
+            box-sizing: border-box;
+            font-family: sans-serif
+        }
+
+        main {
+            max-width: 960px;
+            margin: 0 auto;
+            min-width: 250px;
+            padding: 30px;
+        }
+
+        p {
+            max-width: 500px;
+        }
+
+        .fizz-buzz-item {
+            display: block;
+            float: left;
+            width: 80px;
+            height: 80px;
+            text-align: center;
+            border: 1px solid grey;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        .fizz-buzz-item span {
+            vertical-align: middle;
+            line-height: 80px;
+        }
+
+        .fizz,
+        .fizzbuzz {
+            border: 4px solid green;
+        }
+
+        .buzz,
+        .fizzbuzz {
+            background-color: #D5F5E3;
+        }
+
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Fizz Buzz</h1>
+        <section>
+            <p>In this game, you enter a positive number, and I count from 0 to that number, subbing in "fizz" if it's divisible by 3, "buzz" if it's divisible by 5, and "fizzbuzz" if it's divisible by both</p>
+            <form id="number-chooser" action="www.somewhere.com">
+                <label for="number-choice">Choose a positive number</label>
+                <input id="number-choice" name="number-choice" type="number" required />
+                <input type="submit" />
+            </form>
+        </section>
+        <section>
+            <h2>Results</h2>
+            <div class="js-results"></div>
+        </section>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
+
+    <script id="jsbin-javascript">
+        // define variables that will eventually replace numbers in the sequence
+        var fizzString = 'fizz';
+        var buzzString = 'buzz';
+        var fizzBuzzString = 'fizzbuzz';
+        //define new function, it takes a number as its input
+        function getFizzBuzzValue(num) {
+            //new local variable for the fizz buzz value (val) has the value of the # the function is passing
+            var val = num;
+            //generated if statement saying if the number is perfectly divisible by 15..
+            if (num % 15 === 0) {
+                //then set variable val = fizzBuzzString
+                val = fizzBuzzString;
+                //this says otherwise, if it is perfectly divisible by 5..
+            } else if (num % 5 === 0) {
+                // set to buzzString
+                val = buzzString;
+                // if divisible by 3
+            } else if (num % 3 === 0) {
+                // set to fizzString
+                val = fizzString;
+            }
+            // lastly for this function, return our updated val
+            return val;
+        }
+        //next we need to make a new function that will contain our results within an array
+        function makeFizzBuzzArray(num) {
+            // result is a blank array
+            var result = [];
+            //generate for loop that says var i(ndex)= 1, as long as index is less than or equal to num, increment i
+            for (var i = 1; i <= num; i++) {
+                //add the fizzBuzzValue at the i(ndex) to the result array***?
+                result.push(getFizzBuzzValue(getFizzBuzzValue(i)));
+            }
+            //return our updated result array
+            return result;
+        }
+        //new function that will add new html
+        function doFizzBuzz(num) {
+            //new variable that is =to the makeFizzBuzzArray function we defined above
+            var fizzBuzzArray = makeFizzBuzzArray(num);
+            //for each item within the array do the following
+            fizzBuzzArray.forEach(function(item) {
+                //new variable newElem which we will use to add new elements to our html
+                var newElem = $(
+                    '<div class="fizz-buzz-item"><span>' + item + '</span></div>');
+                // if statement that says if the value of item strictly equals fizzString or buzzString
+                //or fizzBuzzString then give that newElem the class item, which in this case will be 1 of 3 values
+                if (item === fizzString || item === buzzString || item === fizzBuzzString) {
+                    newElem.addClass(item);
+                }
+                //add newElem to end of elements with the js-results class
+                $(".js-results").append(newElem);
+            })
+        }
+        //new function that will clean up DOM
+        function handleFormSubmit() {
+            //the form element with the id number-chooser is submitted and the following function attached to the submit button
+            $('#number-chooser').submit(function(event) {
+                //prevents this form from being blank and or the default value
+                event.preventDefault();
+                // in case there's already results
+                $(".js-results").empty();
+                // The parseInt() function parses a string and returns an integer
+                var choice = parseInt($(event.currentTarget).find(
+                    'input[name="number-choice"]').val());
+                doFizzBuzz(choice);
+            });
+        }
+
+        $(function() {
+            handleFormSubmit();
+        });
+
+    </script>
+</body>
+
+</html>
